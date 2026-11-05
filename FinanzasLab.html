@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinanzasLab | Matemática financiera</title>
+<style>
+:root{--bg:#f4f7fb;--panel:#fff;--ink:#172033;--muted:#64748b;--line:#dce4ef;--brand:#2457d6;--brand2:#173fa8;--soft:#eaf0ff;--green:#087e5b;--red:#b42318;--shadow:0 8px 28px rgba(23,32,51,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:linear-gradient(120deg,#122a58,#2457d6);color:#fff;padding:28px 20px}
+.wrap{max-width:1180px;margin:auto}header h1{margin:0;font-size:clamp(25px,4vw,36px)}header p{margin:7px 0 0;color:#dce7ff}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 22px}
+nav button,.tab{border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 13px;border-radius:10px;cursor:pointer;font-weight:650}
+nav button.active,.tab.active{background:var(--brand);border-color:var(--brand);color:white}
+main{padding:0 18px 45px}.panel{display:none;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow);margin-bottom:18px}.panel.active{display:block}
+h2{font-size:22px;margin:0 0 5px}h3{font-size:17px;margin:18px 0 10px}.sub{color:var(--muted);margin:0 0 18px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.field{display:flex;flex-direction:column;gap:5px}.field label{font-size:13px;color:#475569;font-weight:650}
+input,select,textarea{width:100%;padding:10px 11px;border:1px solid #cbd5e1;border-radius:9px;background:white;color:var(--ink);font:inherit}
+textarea{min-height:115px;resize:vertical}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.primary,.secondary{border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer}.primary{background:var(--brand);color:white}.primary:hover{background:var(--brand2)}.secondary{background:var(--soft);color:var(--brand)}
+.result{margin-top:16px;background:#f0f7ff;border:1px solid #cfe0ff;border-radius:12px;padding:14px;min-height:48px}.result strong{font-size:20px;color:#173fa8}
+.note{font-size:13px;color:var(--muted);margin-top:10px}.pill{display:inline-block;background:#e8f5ef;color:#087e5b;padding:3px 8px;border-radius:99px;font-size:12px;font-weight:700}
+.tablewrap{overflow-x:auto;margin-top:14px}table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:right}th{background:#f1f5f9;color:#334155}th:first-child,td:first-child{text-align:left}
+canvas{width:100%;height:250px;border:1px solid var(--line);border-radius:12px;margin-top:14px}
+.metricgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px}.metric{padding:12px;border:1px solid var(--line);border-radius:11px;background:#fff}.metric span{display:block;color:var(--muted);font-size:12px}.metric b{font-size:19px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:8px 18px 28px}
+@media(max-width:700px){.grid,.grid.three{grid-template-columns:1fr}.panel{padding:16px}nav{gap:6px}nav button{font-size:13px;padding:8px 10px}}
+
+/* ===== Rediseño visual FinanzasLab ===== */
+:root{
+ --bg:#f5f7fc;--panel:#ffffff;--ink:#17243b;--muted:#718096;
+ --line:#e5eaf2;--brand:#5367e8;--brand2:#394bc2;--soft:#eef0ff;
+ --green:#078765;--red:#d34c5b;--shadow:0 14px 40px rgba(29,45,86,.075);
+}
+body{background:radial-gradient(circle at 8% 0%,#e9edff 0,transparent 28%),#f6f8fc;color:var(--ink);font-size:15px}
+header{position:relative;overflow:hidden;padding:34px 22px 38px;background:linear-gradient(118deg,#17264a 0%,#3546a6 58%,#6575ed 100%)}
+header:after{content:"";position:absolute;width:330px;height:330px;border:1px solid rgba(255,255,255,.13);border-radius:50%;right:7%;top:-210px;box-shadow:0 0 0 38px rgba(255,255,255,.035),0 0 0 78px rgba(255,255,255,.025)}
+header .wrap{position:relative;z-index:1}
+header h1{font-size:clamp(28px,4vw,39px);font-weight:800;letter-spacing:-1.3px}
+header h1:before{content:"↗";display:inline-grid;place-items:center;width:38px;height:38px;margin-right:12px;border-radius:12px;background:rgba(255,255,255,.16);font-size:23px;vertical-align:4px}
+header p{font-size:14px;color:#e0e5ff;margin-left:52px}
+main{padding:0 20px 52px}
+nav{position:relative;z-index:2;margin:-17px 0 25px;padding:9px;gap:7px;flex-wrap:nowrap;overflow-x:auto;background:#fff;border:1px solid #e7eaf3;border-radius:15px;box-shadow:0 9px 26px rgba(25,40,80,.09);scrollbar-width:thin}
+nav button{flex:0 0 auto;border:0;border-radius:10px;background:transparent;color:#5d6980;padding:11px 15px;font-size:13px;transition:.18s ease}
+nav button:hover{background:#f2f4ff;color:var(--brand)}
+nav button.active{background:linear-gradient(135deg,#5367e8,#4054d0);color:#fff;box-shadow:0 5px 12px rgba(76,94,220,.25)}
+.panel{border:1px solid #e8ecf4;border-radius:19px;padding:26px;box-shadow:var(--shadow);animation:appear .22s ease}
+@keyframes appear{from{opacity:.65;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.panel h2{font-size:24px;letter-spacing:-.6px;font-weight:800}
+.panel h2:after{content:"";display:block;width:36px;height:4px;margin-top:9px;border-radius:10px;background:linear-gradient(90deg,#5367e8,#8b98ff)}
+.sub{font-size:14px;color:#7a869b;margin:9px 0 23px}
+h3{font-size:16px;font-weight:750;color:#273650;margin:23px 0 11px}
+.grid{gap:17px}
+.field label{font-size:12px;letter-spacing:.2px;text-transform:uppercase;color:#68758b;font-weight:750}
+input,select,textarea{border:1px solid #dfe5ef;border-radius:10px;padding:11px 12px;background:#fbfcff;transition:border .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#7888f0;box-shadow:0 0 0 3px rgba(83,103,232,.12);background:#fff}
+.actions{margin-top:20px}
+.primary{background:linear-gradient(135deg,#5367e8,#4054d0);padding:11px 19px;border-radius:10px;box-shadow:0 5px 12px rgba(76,94,220,.18);transition:transform .15s,box-shadow .15s}
+.primary:hover{background:linear-gradient(135deg,#4559d5,#3447ba);transform:translateY(-1px);box-shadow:0 7px 16px rgba(76,94,220,.25)}
+.secondary{border-radius:10px}
+.result{margin-top:19px;padding:17px 18px;border:1px solid #dce5ff;border-radius:13px;background:linear-gradient(135deg,#f3f6ff,#f8faff);color:#34415d}
+.result strong{font-size:25px;letter-spacing:-.5px;color:#4054d0}
+.result p{margin:5px 0}
+.note{color:#8994a7;line-height:1.6}
+.pill{padding:4px 9px;background:#e5f6ef;color:#087e5b;letter-spacing:.2px}
+.metricgrid{gap:12px}
+.metric{border:1px solid #e7ebf3;border-radius:13px;padding:15px;background:linear-gradient(145deg,#fff,#fafbff);box-shadow:0 3px 10px rgba(30,45,80,.025)}
+.metric span{font-size:11px;letter-spacing:.5px;text-transform:uppercase;font-weight:750;color:#7b879b}
+.metric b{display:block;margin-top:5px;font-size:20px;color:#25365a;overflow-wrap:anywhere}
+.tablewrap{border:1px solid #e6eaf2;border-radius:12px}
+table{font-size:12px}
+th{background:#f3f5fb;color:#53617a;font-size:11px;text-transform:uppercase;letter-spacing:.3px}
+td{color:#46536b}
+tbody tr:nth-child(even){background:#fafbfe}
+tbody tr:hover{background:#f1f4ff}
+canvas{height:250px;border:1px solid #e5eaf3;border-radius:14px;background:linear-gradient(180deg,#fff,#fbfcff);padding:7px}
+footer{color:#99a2b2}
+@media(max-width:700px){
+ header{padding:27px 18px 32px}header p{margin-left:0}
+ main{padding:0 12px 35px}
+ nav{margin-top:-14px;border-radius:13px;padding:7px}
+ nav button{padding:10px 12px}
+ .panel{padding:19px 15px;border-radius:15px}
+ .panel h2{font-size:21px}
+ .grid,.grid.three{gap:13px}
+ .primary{width:100%}
+ .actions{display:grid}
+}
+
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>FinanzasLab</h1><p>Herramientas de matemática financiera y evaluación de proyectos</p><div style="margin:15px 0 0 52px;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:#cbd4ff;font-weight:700">Calculadoras · Gráficas · Análisis financiero</div></div></header>
+<main class="wrap">
+<nav id="nav">
+<button class="active" data-tab="tasas">Conversión de tasas</button>
+<button data-tab="tiempo">Valor del dinero</button>
+<button data-tab="diagramas">Diagramas económicos</button>
+<button data-tab="amortizacion">Amortización</button>
+<button data-tab="proyectos">Evaluación de proyectos</button>
+</nav>
+
+<section class="panel active" id="tasas">
+<h2>Conversión de tasas</h2><p class="sub">Convierte tasas nominales, efectivas, periódicas, vencidas y anticipadas.</p>
+<div class="grid">
+<div class="field"><label>Tipo de conversión</label><select id="rateMode"><option value="nomEff">Nominal anual → efectiva anual</option><option value="effNom">Efectiva anual → nominal anual</option><option value="period">Efectiva anual → efectiva periódica</option><option value="periodAnnual">Efectiva periódica → efectiva anual</option><option value="dueToOrd">Anticipada → vencida (mismo periodo)</option><option value="ordToDue">Vencida → anticipada (mismo periodo)</option></select></div>
+<div class="field"><label>Tasa de entrada (%)</label><input id="rateInput" type="number" value="24" step="any"></div>
+<div class="field"><label>Capitalizaciones / periodos por año (m)</label><input id="rateM" type="number" value="12" min="1" step="1"></div>
+<div class="field"><label>Modalidad de la tasa nominal</label><select id="rateMod"><option value="v">Vencida</option><option value="a">Anticipada</option></select></div>
+</div>
+<div class="actions"><button class="primary" onclick="convertRate()">Convertir tasa</button></div><div class="result" id="rateResult">Ingresa los datos y selecciona “Convertir tasa”.</div>
+<p class="note">Convención: las tasas se ingresan como porcentaje. Para nominal anticipada se convierte primero el descuento periódico a interés vencido.</p>
+</section>
+
+<section class="panel" id="tiempo">
+<h2>Valor del dinero en el tiempo</h2><p class="sub">Calcula valor presente, valor futuro o cuota de una anualidad.</p>
+<div class="grid three">
+<div class="field"><label>Operación</label><select id="tvMode"><option value="fv">Calcular valor futuro (VF)</option><option value="pv">Calcular valor presente (VP)</option><option value="pmt">Calcular cuota (A)</option></select></div>
+<div class="field"><label>Tipo de anualidad</label><select id="tvDue"><option value="ordinary">Vencida (pagos al final)</option><option value="due">Anticipada (pagos al inicio)</option></select></div>
+<div class="field"><label>Tasa por periodo (%)</label><input id="tvRate" type="number" value="2" step="any"></div>
+<div class="field"><label>Número de periodos</label><input id="tvN" type="number" value="12" min="1" step="1"></div>
+<div class="field"><label>Valor presente (VP)</label><input id="tvPV" type="number" value="1000000" step="any"></div>
+<div class="field"><label>Valor futuro (VF)</label><input id="tvFV" type="number" value="0" step="any"></div>
+<div class="field"><label>Cuota / pago (A)</label><input id="tvPMT" type="number" value="0" step="any"></div>
+</div>
+<div class="actions"><button class="primary" onclick="calcTV()">Calcular</button></div><div class="result" id="tvResult">Selecciona la operación e ingresa los valores conocidos.</div>
+<p class="note">La tasa debe corresponder al mismo periodo de los pagos. La anualidad anticipada multiplica el factor de anualidad vencida por (1+i).</p>
+</section>
+
+<section class="panel" id="diagramas">
+<h2>Diagramas económicos</h2><p class="sub">Representa entradas y salidas de dinero en una línea de tiempo.</p>
+<div class="grid">
+<div class="field"><label>Flujos por periodo (separados por coma)</label><textarea id="flows">-1000000, 300000, 350000, 400000, 450000</textarea></div>
+<div class="field"><label>Nombre de los periodos (opcional, separados por coma)</label><textarea id="flowLabels">Hoy, Año 1, Año 2, Año 3, Año 4</textarea></div>
+</div><div class="actions"><button class="primary" onclick="drawFlows()">Construir diagrama</button></div>
+<canvas id="flowCanvas" width="1000" height="270"></canvas><div class="result" id="flowResult">Los valores positivos son entradas y los negativos son salidas.</div>
+</section>
+
+<section class="panel" id="amortizacion">
+<h2>Tablas de amortización</h2><p class="sub">Compara cuota constante (francés) y cuota decreciente con abono a capital constante (alemán).</p>
+<div class="grid three">
+<div class="field"><label>Capital del préstamo</label><input id="loan" type="number" value="10000000" min="0" step="any"></div>
+<div class="field"><label>Tasa por periodo (%)</label><input id="loanRate" type="number" value="2" step="any"></div>
+<div class="field"><label>Número de cuotas</label><input id="loanN" type="number" value="12" min="1" step="1"></div>
+</div><div class="actions"><button class="primary" onclick="amortize()">Generar tablas</button></div>
+<div id="amortResults"></div>
+</section>
+
+<section class="panel" id="proyectos">
+<h2>Evaluación financiera de proyectos</h2><p class="sub">Calcula VPN, TIR, TIRM, PRI, PRIA y relación beneficio/costo a partir de los flujos del proyecto.</p>
+<div class="grid">
+<div class="field"><label>Flujos de caja por periodo (incluye inversión inicial negativa)</label><textarea id="projectFlows">-10000000, 3000000, 3500000, 4000000, 4500000</textarea></div>
+<div class="field"><label>Tasa de descuento / costo de oportunidad (%)</label><input id="discount" type="number" value="15" step="any"></div>
+<div class="field"><label>Tasa de financiación para TIRM (%)</label><input id="financeRate" type="number" value="12" step="any"></div>
+<div class="field"><label>Tasa de reinversión para TIRM (%)</label><input id="reinvestRate" type="number" value="15" step="any"></div>
+<div class="field"><label>Horizonte de evaluación (periodos, opcional)</label><input id="horizon" type="number" placeholder="Usar cantidad de flujos" min="1" step="1"></div>
+</div><div class="actions"><button class="primary" onclick="evaluateProject()">Evaluar proyecto</button></div>
+<div id="projectResults"></div><canvas id="projectCanvas" width="1000" height="250"></canvas>
+<div class="note">PRI: recuperación simple interpolada. PRIA: recuperación descontada interpolada. RB/C: valor presente de beneficios dividido por valor presente de costos. La TIR/TIRM se calculan por periodo de flujo.</div>
+</section>
+</main>
+<footer>FinanzasLab · Herramienta académica. Verifica los supuestos y redondeos exigidos por tu docente antes de entregar resultados.</footer>
+<script>
+const fmt=(x,d=2)=>Number.isFinite(x)?x.toLocaleString('es-CO',{minimumFractionDigits:d,maximumFractionDigits:d}):'No definido';
+const num=id=>Number(document.getElementById(id).value);
+const val=id=>document.getElementById(id).value;
+const pct=x=>fmt(x*100,4)+'%';
+function show(id,html){document.getElementById(id).innerHTML=html}
+document.getElementById('nav').addEventListener('click',e=>{if(!e.target.dataset.tab)return;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b===e.target));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===e.target.dataset.tab));if(e.target.dataset.tab==='diagramas')drawFlows()});
+function convertRate(){
+ let x=num('rateInput')/100,m=Math.max(1,Math.floor(num('rateM'))),mode=val('rateMode'),out,label='';
+ if(!Number.isFinite(x)){show('rateResult','Ingresa una tasa válida.');return}
+ if(mode==='nomEff'){let periodic=x/m;if(val('rateMod')==='a'){if(periodic>=1){show('rateResult','La tasa anticipada periódica debe ser menor al 100%.');return}periodic=periodic/(1-periodic)}out=Math.pow(1+periodic,m)-1;label='Tasa efectiva anual'}
+ if(mode==='effNom'){if(x<=-1){show('rateResult','La tasa debe ser mayor a -100%.');return}let p=Math.pow(1+x,1/m)-1;if(val('rateMod')==='a')p=p/(1+p);out=p*m;label='Tasa nominal anual';}
+ if(mode==='period'){if(x<=-1){show('rateResult','La tasa debe ser mayor a -100%.');return}out=Math.pow(1+x,1/m)-1;label='Tasa efectiva periódica'}
+ if(mode==='periodAnnual'){if(x<=-1){show('rateResult','La tasa debe ser mayor a -100%.');return}out=Math.pow(1+x,m)-1;label='Tasa efectiva anual'}
+ if(mode==='dueToOrd'){if(x>=1){show('rateResult','La tasa anticipada debe ser menor al 100%.');return}out=x/(1-x);label='Tasa vencida equivalente'}
+ if(mode==='ordToDue'){if(x<=-1){show('rateResult','La tasa vencida debe ser mayor a -100%.');return}out=x/(1+x);label='Tasa anticipada equivalente'}
+ show('rateResult',`<span class="pill">Resultado</span><p>${label}</p><strong>${pct(out)}</strong><p class="note">Equivalente decimal: ${fmt(out,8)}</p>`);
+}
+function calcTV(){
+ let i=num('tvRate')/100,n=Math.floor(num('tvN')),pv=num('tvPV'),fv=num('tvFV'),a=num('tvPMT'),mode=val('tvMode'),due=val('tvDue')==='due'?1+i:1;
+ if(n<1||i<=-1||!Number.isFinite(i)){show('tvResult','Revisa que el número de periodos sea positivo y la tasa mayor a -100%.');return}
+ let factor=i===0?n:(Math.pow(1+i,n)-1)/i;factor*=due;let result,label;
+ if(mode==='fv'){result=pv*Math.pow(1+i,n)+a*factor;label='Valor futuro (VF)'}
+ if(mode==='pv'){result=(fv/Math.pow(1+i,n))+a*(i===0?n:((1-Math.pow(1+i,-n))/i)*due);label='Valor presente (VP)'}
+ if(mode==='pmt'){let target=mode==='pmt'?fv-pv*Math.pow(1+i,n):0;result=target/factor;label='Cuota por periodo (A)'}
+ show('tvResult',`<span class="pill">Resultado</span><p>${label}</p><strong>${fmt(result)}</strong><p class="note">Tasa: ${pct(i)} · Periodos: ${n} · Modalidad: ${val('tvDue')==='due'?'anticipada':'vencida'}</p>`);
+}
+function parseList(id){return val(id).split(/[,;\n]+/).map(s=>Number(s.trim().replace(/\s/g,''))).filter((x,i,a)=>safenum(x));function safenum(x){return Number.isFinite(x)}}
+function drawFlows(){
+ let f=parseList('flows'),labs=val('flowLabels').split(/[,;\n]+/).map(s=>s.trim()),c=document.getElementById('flowCanvas'),ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);
+ if(!f.length){show('flowResult','Ingresa al menos un flujo numérico.');return}
+ let mid=145,max=Math.max(1,...f.map(Math.abs)),step=(c.width-100)/Math.max(1,f.length-1);ctx.strokeStyle='#64748b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(45,mid);ctx.lineTo(c.width-35,mid);ctx.stroke();
+ f.forEach((v,i)=>{let x=50+i*step,h=Math.abs(v)/max*95;ctx.strokeStyle=v>=0?'#087e5b':'#c0392b';ctx.fillStyle=ctx.strokeStyle;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,mid);ctx.lineTo(x,mid+(v>=0?-h:h));ctx.stroke();ctx.beginPath();ctx.moveTo(x-6,mid+(v>=0?-h+9:h-9));ctx.lineTo(x,mid+(v>=0?-h:h));ctx.lineTo(x+6,mid+(v>=0?-h+9:h-9));ctx.stroke();ctx.font='12px Arial';ctx.textAlign='center';ctx.fillText(fmt(v,0),x,mid+(v>=0?-h-9:h+18));ctx.fillStyle='#334155';ctx.fillText(labs[i]||('Periodo '+i),x,mid+45)});
+ show('flowResult',`Se graficaron ${f.length} flujos. <span style="color:#087e5b">Verde = entrada</span> · <span style="color:#c0392b">Rojo = salida</span>.`);
+}
+function amortize(){
+ let P=num('loan'),i=num('loanRate')/100,n=Math.floor(num('loanN'));if(P<=0||n<1||i<=-1){show('amortResults','Verifica capital, tasa y número de cuotas.');return}
+ let payment=i===0?P/n:P*i/(1-Math.pow(1+i,-n)),bal=P,rows1=[],total1=0;
+ for(let k=1;k<=n;k++){let interest=bal*i,principal=payment-interest;if(k===n)principal=bal;let pay=principal+interest;bal=Math.max(0,bal-principal);total1+=interest;rows1.push([k,bal+principal,interest,principal,pay,bal])}
+ bal=P;let principal=P/n,rows2=[],total2=0;for(let k=1;k<=n;k++){let interest=bal*i,pr=k===n?bal:principal,pay=pr+interest;bal=Math.max(0,bal-pr);total2+=interest;rows2.push([k,bal+pr,interest,pr,pay,bal])}
+ const table=(rows,title,total)=>`<h3>${title}</h3><div class="tablewrap"><table><thead><tr><th>Periodo</th><th>Saldo inicial</th><th>Interés</th><th>Abono a capital</th><th>Cuota</th><th>Saldo final</th></tr></thead><tbody>${rows.map(r=>`<tr>${r.map((v,j)=>`<td>${j===0?v:fmt(v,0)}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p class="note">Total de intereses: <b>${fmt(total,0)}</b></p>`;
+ show('amortResults',table(rows1,'Sistema de cuota constante (francés)',total1)+table(rows2,'Sistema de cuota decreciente / capital constante (alemán)',total2));
+}
+function npv(flows,r){return flows.reduce((s,v,t)=>s+v/Math.pow(1+r,t),0)}
+function irr(flows){
+ let lo=-.9999,hi=1, f=x=>npv(flows,x),flo=f(lo),fhi=f(hi),tries=0;
+ while(flo*fhi>0&&hi<1e6&&tries++<80){hi=hi*2+1;fhi=f(hi)}
+ if(!Number.isFinite(flo)||!Number.isFinite(fhi)||flo*fhi>0)return NaN;
+ for(let k=0;k<250;k++){let mid=(lo+hi)/2,fm=f(mid);if(Math.abs(fm)<1e-8)return mid;if(flo*fm<=0){hi=mid;fhi=fm}else{lo=mid;flo=fm}}
+ return (lo+hi)/2
+}
+function mirr(flows,fin, reinv){
+ let n=flows.length-1,neg=0,pos=0;flows.forEach((v,t)=>{if(v<0)neg+=-v/Math.pow(1+fin,t);else pos+=v*Math.pow(1+reinv,n-t)});
+ if(neg<=0||pos<=0)return NaN;return Math.pow(pos/neg,1/n)-1
+}
+function payback(flows,rate=0){
+ let cum=0;for(let t=0;t<flows.length;t++){let v=flows[t]/Math.pow(1+rate,t),prev=cum;cum+=v;if(cum>=0&&t>0&&v>0)return (t-1)+(-prev)/v}return NaN
+}
+function evaluateProject(){
+ let f=parseList('projectFlows'),r=num('discount')/100,fr=num('financeRate')/100,rr=num('reinvestRate')/100;
+ if(f.length<2||!f.some(x=>x<0)||!f.some(x=>x>0)||r<=-1||fr<=-1||rr<=-1){show('projectResults','Ingresa al menos dos flujos, con inversión/salidas y entradas, y tasas mayores a -100%.');return}
+ let vpn=npv(f,r),tir=irr(f),tirm=mirr(f,fr,rr),pri=payback(f),pria=payback(f,r),pvBenefits=f.reduce((s,v,t)=>s+(v>0?v/Math.pow(1+r,t):0),0),pvCosts=f.reduce((s,v,t)=>s+(v<0?-v/Math.pow(1+r,t):0),0),bc=pvBenefits/pvCosts;
+ let horizon=Math.floor(num('horizon'))||f.length-1;
+ let verdict=vpn>0?'Aceptable financieramente bajo la tasa indicada':vpn<0?'No alcanza la rentabilidad exigida':'Indiferente frente a la tasa de descuento';
+ show('projectResults',`<div class="metricgrid"><div class="metric"><span>VPN</span><b>${fmt(vpn,0)}</b></div><div class="metric"><span>TIR</span><b>${pct(tir)}</b></div><div class="metric"><span>TIRM</span><b>${pct(tirm)}</b></div><div class="metric"><span>PRI</span><b>${fmt(pri,2)} periodos</b></div><div class="metric"><span>PRIA</span><b>${fmt(pria,2)} periodos</b></div><div class="metric"><span>Relación B/C</span><b>${fmt(bc,4)}</b></div></div><div class="result"><b>Diagnóstico:</b> ${verdict}.<br>Horizonte de flujos: ${f.length-1} periodos${horizon!==f.length-1?' (el horizonte indicado no modifica los flujos ingresados)':''}.<br>VP beneficios: ${fmt(pvBenefits,0)} · VP costos: ${fmt(pvCosts,0)}.</div>`);
+ drawProject(f);
+}
+function drawProject(f){
+ let c=document.getElementById('projectCanvas'),ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);let mid=125,max=Math.max(1,...f.map(Math.abs)),step=(c.width-100)/Math.max(1,f.length-1);
+ ctx.strokeStyle='#64748b';ctx.beginPath();ctx.moveTo(40,mid);ctx.lineTo(c.width-30,mid);ctx.stroke();
+ f.forEach((v,i)=>{let x=50+i*step,h=Math.abs(v)/max*85;ctx.strokeStyle=v>=0?'#087e5b':'#c0392b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,mid);ctx.lineTo(x,mid+(v>=0?-h:h));ctx.stroke();ctx.fillStyle='#334155';ctx.font='12px Arial';ctx.textAlign='center';ctx.fillText(fmt(v,0),x,mid+(v>=0?-h-8:h+18));ctx.fillText('t='+i,x,mid+45)});
+}
+drawFlows();
+</script>
+</body>
+</html>
